@@ -56,12 +56,12 @@ __`app/index.html`:__
 
 We added a standard HTML `<input>` tag and used angular's
 {@link api/ng.filter:filter $filter} function to process the input for the
-`ngRepeate` directive.
+`ngRepeat` directive.
 
 This lets a user enter search criteria and immediately see the effects of their search on the phone
 list. This new code demonstrates the following:
 
-* Data-binding. This is one of the core features in Angular. When the page loads, Angular binds the
+* Data-binding: This is one of the core features in Angular. When the page loads, Angular binds the
 name of the input box to a variable of the same name in the data model and keeps the two in sync.
 
   In this code, the data that a user types into the input box (named __`query`__) is immediately
@@ -71,7 +71,7 @@ the DOM to reflect the current state of the model.
 
       <img  class="diagram" src="img/tutorial/tutorial_03.png">
 
-* Use of `filter` filter. The {@link api/ng.filter:filter filter} function uses the
+* Use of the `filter` filter: The {@link api/ng.filter:filter filter} function uses the
 `query` value to create a new array that contains only those records that match the `query`.
 
   `ngRepeat` automatically updates the view in response to the changing number of phones returned
@@ -148,9 +148,9 @@ and title elements:
 
           <html ng-app ng-controller="PhoneListCtrl">
 
-  Be sure to *remove* the `ng-controller` declaration from the body element.
+  Be sure to __remove__ the `ng-controller` declaration from the body element.
 
-  While using double curlies works fine in within the title element, you might have noticed that
+  While using double curlies works fine within the title element, you might have noticed that
 for a split second they are actually displayed to the user while the page is loading. A better
 solution would be to use the {@link api/ng.directive:ngBind
 ngBind} or {@link api/ng.directive:ngBindTemplate
