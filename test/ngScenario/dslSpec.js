@@ -775,4 +775,15 @@ describe("angular.scenario.dsl", function() {
       });
     });
   });
+
+  describe('setDecorators', function(){
+    it('should set the extra decorators on the application', function(){
+      var spy = spyOn($root.application, 'addDecorators').andCallThrough(),
+        decorators = [['myService', function ($delegate) { }]];
+
+      $root.dsl.addDecorators(decorators);
+
+      expect(spy).toHaveBeenCalledOnceWith(decorators);
+    });
+  });
 });

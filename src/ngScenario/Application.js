@@ -86,19 +86,26 @@ angular.scenario.Application.prototype.navigateTo = function(url, loadFn, errorF
               return $injector;
             };
             self.executeAction(loadFn);
+            self.extraDecorators = null;
           };
 
           // Disable animations
 
           // TODO(i): this doesn't disable javascript animations
           //          we don't need that for our tests, but it should be done
-          resumeBootstrap([['$provide', function($provide) {
+          var overrideModules = [['$provide', function($provide) {
             $provide.decorator('$sniffer', function($delegate) {
               $delegate.transitions = false;
               $delegate.animations = false;
               return $delegate;
             });
-          }]]);
+          }]];
+
+          if(angular.isArray(self.extraDecorators)){
+            overrideModules = overrideModules.concat(self.extraDecorators);
+          }
+
+          resumeBootstrap(overrideModules);
         } else {
           self.executeAction(loadFn);
         }
@@ -140,4 +147,23 @@ angular.scenario.Application.prototype.executeAction = function(action) {
       });
     });
   }
+};
+
+/**
+ * Sets an array of decorators that will be registered with the application being
+ * tested during bootstrap. Calling this after the tested application has been
+ * bootstrapped will register them for the use the next time the application is
+ * bootstrapped.
+ *
+ * @param {Array} decorators An array of decorators. [['serviceName', function($delegate){}]]
+ */
+angular.scenario.Application.prototype.addDecorators = function(decorators) {
+  var self = this;
+  self.extraDecorators = this.extraDecorators || [];
+
+  angular.forEach(decorators, function(decorator){
+    self.extraDecorators.push(['$provide', function ($provide) {
+      $provide.decorator(decorator[0], decorator[1]);
+    }]);
+  });
 };
