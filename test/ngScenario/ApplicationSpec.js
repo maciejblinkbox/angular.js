@@ -150,4 +150,55 @@ describe('angular.scenario.Application', function() {
     handlers[0]();
     dealoc(testWindow.document);
   }));
+
+  it('should add extra decorators to be registered with the tested application during bootstrap', function(){
+    var testDecorators = {
+      '1': ['testService1', function($delegate){ return $delegate; }],
+      '2': ['testService2', function($delegate){ return $delegate; }],
+      '2.1': ['testService2', function($delegate){ return $delegate; }]
+    };
+
+    app.addDecorators([testDecorators['1']]);
+    expect(app.extraDecorators.length).toBe(1);
+
+    app.addDecorators([testDecorators['2']]);
+    expect(app.extraDecorators.length).toBe(2);
+
+    app.addDecorators([testDecorators['2.1']]);
+    expect(app.extraDecorators.length).toBe(3);
+  });
+
+  it('should clear extra decorators once the tested application has been bootstrapped', function(){
+    var testDecorators = {
+      '1': ['testService1', function($delegate){ return $delegate; }],
+      '2': ['testService2', function($delegate){ return $delegate; }],
+      '2.1': ['testService2', function($delegate){ return $delegate; }]
+    },
+      testWindow = {
+      document: {},
+      angular: {
+        resumeBootstrap: function () {
+          return {
+            get: function () {
+              return document.body;
+            },
+            invoke: function () {
+            }
+          }
+        }
+      }};
+
+    app.getWindow_ = function() {
+      return  testWindow;
+    };
+
+    app.addDecorators([testDecorators['1']]);
+    app.addDecorators([testDecorators['2']]);
+    expect(app.extraDecorators.length).toBe(2);
+
+    app.navigateTo('http://localhost/');
+    callLoadHandlers(app);
+
+    expect(app.extraDecorators).toBe(null);
+  });
 });

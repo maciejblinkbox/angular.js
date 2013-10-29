@@ -449,3 +449,26 @@ angular.scenario.dsl('element', function() {
     return chain;
   };
 });
+
+/**
+ * Allows custom decorators to be set when the tests are run
+ * Usage:
+ *
+ *  setDecorators([['myService', function(myService) {
+ *      myService.myServiceFunction = function() { return true; };
+ *      return myService;
+ *    }], ['myOtherService', function(myOtherService) {
+ *      myOtherService.myOtherServiceFunction = function() { return false; };
+ *      return myOtherService;
+ *    }]
+ *  ])
+ */
+angular.scenario.dsl('addDecorators', function() {
+  return function(decorators) {
+    var application = this.application;
+    return this.addFuture("set extra decorators for this test run", function(done) {
+      application.addDecorators(decorators);
+      done(null, decorators);
+    });
+  }
+});
